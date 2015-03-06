@@ -1,23 +1,17 @@
 // load http module
 var http = require('http');
 
-// create http server
-var server = http.createServer( function(request, response){
+// create http server on port 8000
+http.createServer( function(request, response){
   // header
   response.writeHeader(200, {
     'Content-type': 'text/plain'
   });
 
-  // write content
-  response.write('Hello World!');
+  // send the repsonse with the content
+  response.end('Hello World!');
 
-  // send the repsonse
-  response.end();
-
-});
-
-// listen on port 8000
-server.listen(8000)
+}).listen(8000);
 
 // log it to the console
 console.log('Server running on port 8000')
