@@ -141,7 +141,16 @@ var Fruit = Backbone.Model.extend({});
 
 // create a collection
 var Fruits = Backbone.Collection.extend({
-  model: Fruit
+  model: Fruit,
+  initialize: function(){
+    this.on('add', function(){
+      console.log('New Fruit added');
+    });
+
+    this.on('remove', function(){
+      console.log('Fruit removed');
+    });
+  }
 });
 
 // create a new instance of the collection
@@ -152,8 +161,11 @@ var fruitbowl = new Fruits({
 
 // add another model to the collection
 fruitbowl.add({
-  type: 'banann',
+  type: 'bananna',
   color: 'yellow'  
 });
+
+// remove model to the collection
+fruitbowl.remove(fruitbowl.models[0]);
 
 
