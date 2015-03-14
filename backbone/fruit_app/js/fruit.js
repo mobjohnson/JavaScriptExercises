@@ -31,10 +31,28 @@
 
 // **************************
 
+// // create the model
+// var Fruit = Backbone.Model.extend({
+//   defaults: {
+//     condition: 'perfect'
+//   }
+// });
+
+// // create a new instance of the model
+// var apple = new Fruit({
+//   type: 'apple',
+//   color: 'red',
+//   condition: 'shiny'
+// });
+
+// console.log(apple.get('condition'));
+
+// **************************
+
 // create the model
 var Fruit = Backbone.Model.extend({
-  defaults: {
-    condition: 'perfect'
+    initialize: function(){
+    console.log('Fruit model initialized');
   }
 });
 
@@ -44,8 +62,6 @@ var apple = new Fruit({
   color: 'red',
   condition: 'shiny'
 });
-
-console.log(apple.get('condition'));
 
 
 
