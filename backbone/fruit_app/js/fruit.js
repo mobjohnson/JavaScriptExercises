@@ -110,32 +110,50 @@
 
 // **************************
 
-// create the model
-var Fruit = Backbone.Model.extend({
-  // validate the model whenever it changes
-  validate: function(attrs, save){
-    if ( attrs.quantity && !attrs.quantity.isNumber){
-      return 'Quantity must be a number';
-    }
-  }
+// // create the model
+// var Fruit = Backbone.Model.extend({
+//   // validate the model whenever it changes
+//   validate: function(attrs, save){
+//     if ( attrs.quantity && !attrs.quantity.isNumber){
+//       return 'Quantity must be a number';
+//     }
+//   }
+// });
+
+// // create a new instance of the model
+// var apple = new Fruit({
+//   name: 'apple'
+// });
+
+// // add an error event handler - this fires if it fails validation
+// apple.on( 'invalid', function(model, error){
+//   console.log(error);
+// });
+
+// //  set a malformed quantity to trigger a validation error
+// apple.save( 'quantity', 'a bunch');
+// // HAD TO CHANGE CODE TO MATCH UNDERSCORE DOCUMENTATION
+
+// **************************
+
+// create a model
+var Fruit = Backbone.Model.extend({});
+
+// create a collection
+var Fruits = Backbone.Collection.extend({
+  model: Fruit
 });
 
-// create a new instance of the model
-var apple = new Fruit({
-  name: 'apple'
+// create a new instance of the collection
+var fruitbowl = new Fruits({
+  type: 'apple',
+  color: 'red'
 });
 
-// add an error event handler - this fires if it fails validation
-apple.on( 'invalid', function(model, error){
-  console.log(error);
+// add another model to the collection
+fruitbowl.add({
+  type: 'banann',
+  color: 'yellow'  
 });
-
-//  set a malformed quantity to trigger a validation error
-apple.save( 'quantity', 'a bunch');
-// HAD TO CHANGE CODE TO MATCH UNDERSCORE DOCUMENTATION
-
-
-
-
 
 
