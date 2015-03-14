@@ -137,35 +137,126 @@
 // **************************
 
 // create a model
-var Fruit = Backbone.Model.extend({});
+// var Fruit = Backbone.Model.extend({});
 
-// create a collection
-var Fruits = Backbone.Collection.extend({
-  model: Fruit,
+// // create a collection
+// var Fruits = Backbone.Collection.extend({
+//   model: Fruit,
+//   initialize: function(){
+//     this.on('add', function(){
+//       console.log('New Fruit added');
+//     });
+
+//     this.on('remove', function(){
+//       console.log('Fruit removed');
+//     });
+//   }
+// });
+
+// // create a new instance of the collection
+// var fruitbowl = new Fruits({
+//   type: 'apple',
+//   color: 'red'
+// });
+
+// // add another model to the collection
+// fruitbowl.add({
+//   type: 'bananna',
+//   color: 'yellow'  
+// });
+
+// // remove model from the collection
+// fruitbowl.remove(fruitbowl.models[0]);
+
+// **************************
+// create a view
+// var FruitView = Backbone.View.extend({
+//   el: '#my-element',
+
+//   render: function(){
+//     this.$el.html('Markup here');
+
+//     return this;
+//   }
+// });
+
+
+// var Fruit = Backbone.Model.extend({});
+
+// var apple = new Fruit({
+//   name: 'apple'
+// });
+
+// var appleView = new FruitView({
+//   model: apple
+// });
+
+
+// **************************
+// create a view
+// var MyView = Backbone.View.extend({
+//   el: '#my-element',
+
+//   // initialize: function(){
+//   //   this.render();
+//   // }
+
+//   // render: function() {
+//   //   this.$el.html('Hello World');
+
+//   //   return this;
+//   // }
+
+// });
+
+// var myView = new MyView();
+
+// **************************
+
+// create the model for the user
+var User = Backbone.Model.extend({});
+
+var user = new User({
+  username: 'martin',
+  displayName: 'Martin Johnson',
+  bio: 'A really hoopy frood'
+});
+
+// create the view
+var UserView = Backbone.View.extend({
+  el: '#user-card',
+
   initialize: function(){
-    this.on('add', function(){
-      console.log('New Fruit added');
-    });
+    this.render();
+  },
 
-    this.on('remove', function(){
-      console.log('Fruit removed');
-    });
+  render: function(){
+    // create a link to the user's profile as a wrapper
+    var $card = $('<a href="/users/' + this.model.get('username') + '">');
+
+    // add the user's name
+    var $name = $('<h1>' + this.model.get('displayName') + '</h1>').appendTo($card);
+
+    // add the user's bio
+    var $bio = $('<p>' + this.model.get('bio') + '</p>').appendTo($card);
+
+    // append this element to the DOM
+    this.$el.html($card);
+
+    return this;
   }
+
+})
+
+// create a new instance of the view, tying it to the user model
+var userView = new UserView({
+  model: user
 });
 
-// create a new instance of the collection
-var fruitbowl = new Fruits({
-  type: 'apple',
-  color: 'red'
-});
 
-// add another model to the collection
-fruitbowl.add({
-  type: 'bananna',
-  color: 'yellow'  
-});
 
-// remove model to the collection
-fruitbowl.remove(fruitbowl.models[0]);
+
+
+
 
 
