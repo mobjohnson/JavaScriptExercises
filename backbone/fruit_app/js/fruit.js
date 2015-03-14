@@ -214,44 +214,103 @@
 // **************************
 
 // create the model for the user
+// var User = Backbone.Model.extend({});
+
+// var user = new User({
+//   username: 'martin',
+//   displayName: 'Martin Johnson',
+//   bio: 'A really hoopy frood'
+// });
+
+// // create the view
+// var UserView = Backbone.View.extend({
+//   el: '#user-card',
+
+//   initialize: function(){
+//     this.render();
+//   },
+
+//   render: function(){
+//     // create a link to the user's profile as a wrapper
+//     var $card = $('<a href="/users/' + this.model.get('username') + '">');
+
+//     // add the user's name
+//     var $name = $('<h1>' + this.model.get('displayName') + '</h1>').appendTo($card);
+
+//     // add the user's bio
+//     var $bio = $('<p>' + this.model.get('bio') + '</p>').appendTo($card);
+
+//     // append this element to the DOM
+//     this.$el.html($card);
+
+//     return this;
+//   }
+
+// });
+
+// // create a new instance of the view, tying it to the user model
+// var userView = new UserView({
+//   model: user
+// });
+
+// **************************
+
+// var myView = new MyView();
+
+// // log the DOM reference of the view's element
+// console.log(myView.el);
+
+// **************************
+
+// var MyView = Backbone.View.extend({
+//   el: '#my-element',
+
+//   render: function(){
+//     this.$el.html('Markup here');
+
+//     return this;
+//   }
+
+// });
+
+// **************************
+
+// create a model for the user
 var User = Backbone.Model.extend({});
 
 var user = new User({
-  username: 'martin',
-  displayName: 'Martin Johnson',
-  bio: 'A really hoopy frood'
+  displayName: 'Martin'
 });
 
-// create the view
-var UserView = Backbone.View.extend({
-  el: '#user-card',
+// create the view for the welcome message
+var WelcomeMessageView = Backbone.View.extend({
+  el: 'header .welcome-message',
 
   initialize: function(){
+    // bind any changes in this view's model to its render function
+    // in this case you only need to track changes in the
+    // displayNme attribute
+    this.model.on('change:displayName', this.render, this);
+
+    // also call the render function when the view is initiailzed
     this.render();
   },
 
+  // the render function displays data the model data on the page
   render: function(){
-    // create a link to the user's profile as a wrapper
-    var $card = $('<a href="/users/' + this.model.get('username') + '">');
+    var displayName = this.model.get('displayName');
 
-    // add the user's name
-    var $name = $('<h1>' + this.model.get('displayName') + '</h1>').appendTo($card);
-
-    // add the user's bio
-    var $bio = $('<p>' + this.model.get('bio') + '</p>').appendTo($card);
-
-    // append this element to the DOM
-    this.$el.html($card);
+    this.$el.html('Welcome ' + displayName);
 
     return this;
   }
 
-})
-
-// create a new instance of the view, tying it to the user model
-var userView = new UserView({
-  model: user
 });
+
+// create a new instance of the welcome message view
+var welcomeMessageView = new WelcomeMessageView({
+  model: user
+})
 
 
 
