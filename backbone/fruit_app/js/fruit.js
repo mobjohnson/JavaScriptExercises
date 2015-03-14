@@ -275,44 +275,49 @@
 
 // **************************
 
-// create a model for the user
-var User = Backbone.Model.extend({});
+// // create a model for the user
+// var User = Backbone.Model.extend({});
 
-var user = new User({
-  displayName: 'Martin'
+// var user = new User({
+//   displayName: 'Martin'
+// });
+
+// // create the view for the welcome message
+// var WelcomeMessageView = Backbone.View.extend({
+//   el: 'header .welcome-message',
+
+//   initialize: function(){
+//     // bind any changes in this view's model to its render function
+//     // in this case you only need to track changes in the
+//     // displayNme attribute
+//     this.model.on('change:displayName', this.render, this);
+
+//     // also call the render function when the view is initiailzed
+//     this.render();
+//   },
+
+//   // the render function displays data the model data on the page
+//   render: function(){
+//     var displayName = this.model.get('displayName');
+
+//     this.$el.html('Welcome ' + displayName);
+
+//     return this;
+//   }
+
+// });
+
+// // create a new instance of the welcome message view
+// var welcomeMessageView = new WelcomeMessageView({
+//   model: user
+// })
+
+// **************************
+var MyView = Backbone.View.extend({
+  tagName: 'li'
 });
 
-// create the view for the welcome message
-var WelcomeMessageView = Backbone.View.extend({
-  el: 'header .welcome-message',
-
-  initialize: function(){
-    // bind any changes in this view's model to its render function
-    // in this case you only need to track changes in the
-    // displayNme attribute
-    this.model.on('change:displayName', this.render, this);
-
-    // also call the render function when the view is initiailzed
-    this.render();
-  },
-
-  // the render function displays data the model data on the page
-  render: function(){
-    var displayName = this.model.get('displayName');
-
-    this.$el.html('Welcome ' + displayName);
-
-    return this;
-  }
-
-});
-
-// create a new instance of the welcome message view
-var welcomeMessageView = new WelcomeMessageView({
-  model: user
-})
-
-
+var myBiew = new MyView;
 
 
 
