@@ -85,26 +85,57 @@
 
 // **************************
 
+// // create the model
+// var Fruit = Backbone.Model.extend({
+//   initialize: function(){
+//     console.log('Fruit model initialized');
+//     // track changes in the model
+//     this.on('change', function(){
+//       console.log('Values for the Fruit model have changed');
+//     });
+//     // track changes in the condition attribute
+//     this.on('change:condition', function(){
+//       console.log('the condition of this Fruit has changed. Might be getting moldy.');
+//     });
+//   }
+// });
+
+// // create a new instance of the model
+// var apple = new Fruit({
+//   type: 'apple',
+//   color: 'red',
+//   condition: 'shiny'
+// });
+
+
+// **************************
+
 // create the model
 var Fruit = Backbone.Model.extend({
-  initialize: function(){
-    console.log('Fruit model initialized');
-    // track changes in the model
-    this.on('change', function(){
-      console.log('Values for the Fruit model have changed');
-    });
-    // track changes in the condition attribute
-    this.on('change:condition', function(){
-      console.log('the condition of this Fruit has changed. Might be getting moldy.');
-    });
+  // validate the model whenever it changes
+  validate: function(attrs, save){
+    if ( attrs.quantity && !attrs.quantity.isNumber){
+      return 'Quantity must be a number';
+    }
   }
 });
 
 // create a new instance of the model
 var apple = new Fruit({
-  type: 'apple',
-  color: 'red',
-  condition: 'shiny'
+  name: 'apple'
 });
+
+// add an error event handler - this fires if it fails validation
+apple.on( 'invalid', function(model, error){
+  console.log(error);
+});
+
+//  set a malformed quantity to trigger a validation error
+apple.save( 'quantity', 'a bunch');
+// HAD TO CHANGE CODE TO MATCH UNDERSCORE DOCUMENTATION
+
+
+
+
 
 
