@@ -2,13 +2,25 @@
 // create the model
 var User = Backbone.Model.extend({
   initialize: function(){
-    // add handler to save any added model
+    // add handlers to save any changes to the model
     this.on('add', this.addHandler);
+    this.on('change', this.changeHandler);    
+    this.on('remove', this.removeHandler);
   },
 
   addHandler: function(){
     // save the model when it's created
     this.save();
+  },
+
+  changeHandler: function(){
+    // only save what has been changed
+    this.save(this.changed);
+  },
+
+  removeHandler: function(){
+    // destroy the model from the server
+    this.destroy();
   }
 });
 
