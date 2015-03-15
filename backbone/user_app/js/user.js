@@ -1,87 +1,48 @@
-var Band = {};
-
 // create the model
-Band.Member = Backbone.Model.extend({});
+var User = Backbone.Model.extend({
+  // url of the REST API
+  url: './path-to-api/'
 
-// create teh collection
-Band.Members = Backbone.Collection.extend({
-  model: Band.Member
-})
-
-// populate the collection
-var band = new Band.Members([
-  {name: 'John'},
-  {name: 'Paul'},
-  {name: 'George'},
-  {name: 'Ringo'}
-]);
-
-// create a view for each band member
-Band.Member.View = Backbone.View.extend({
-  tagName: 'li',
-
-  render: function(){
-    // add the name to the list item
-    this.$el.text(this.model.get('name'));
-
-    // append the new list item to th elist in the parent view
-    this.parentView.$el.append(this.$el);
-  
-    return this;
-  }
 });
 
-console.log('stop');
+// create a new user
+var user = new User({
+  displayName: 'Martin Johnson',
+  username: 'mobjohnson',
+  bio: 'A Hoopy Frood'
+});
 
-// create a view for the band
-Band.Members.View = Backbone.View.extend({
-  el: '#band-wrapper',
-
-  initialize: function(){
-    // share the 'this' context with the render function
-    _.bindAll(this, 'render');
-
-    // add various events for the collection
-    this.collection.on('change', this.render);
-    this.collection.on('add', this.render);
-    this.collection.on('remove', this.render);
-
-    // render the initial state
-    this.render();
+// fetch the model from the server
+user.fetch({
+  sucess: function(){
+    console.log('User data fetched from the server');
   },
 
-  render: function(){
-    // empty out the view element
-    this.$el.empty();
+  error: function(){
+    console.log('Unable to fetch user data');
+  }
+});
 
-    // cache this before entering the loop
-    var thisView = this;
+// check for changes every 5 seconds
+setInterval(function(){
+  myModel.fetch();
+}, 5000);
 
-    // loop through all of the items in the collection,
-    // creating a view for each
-    this.collection.each(function(bandMember){
-      var bandMemberView = new Band.Member.View({
-        model: bandMember
-      });
+// save it
+user.save({},{
+  // success callback
+  success: function(){
+    console.log('User saved auomatically');
+  },
 
-      // save a reference to this view within the child view
-      bandMemberView.parentView = thisView;
-
-      // render it
-      bandMemberView.render();
-    
-    });
-
-    return this;
+  // error callback
+  error: function(data, err){
+    // pull the status code and text of the error
+    console.log('Error: ' + err.status + ' = ' + err.statusText)
   }
 });
 
 
-
-// create a new instanc of the band view
-var bandView = new Band.Members.View({
-  collection: band
-});
 
 
 
