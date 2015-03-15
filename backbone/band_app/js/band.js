@@ -27,3 +27,39 @@ Band.Member.View = Backbone.View.extend({
     return this;
   }
 });
+
+console.log('stop');
+
+// create a view for the band
+Band.Members.View = Backbone.View.extend({
+  el: '#band-wrapper',
+
+  initialize: function(){
+    this.render();
+  },
+
+  render: function(){
+    // loop through all of the items in the collection,
+    // creating a view for each
+    this.collection.each(function(bandMember){
+      var bandMemeberView = new Band.Member.View({
+        model: bandMember
+      });
+    });
+
+    return this;
+  }
+});
+
+
+
+// create a new instanc of the band view
+var bandView = new Band.Members.View({
+  collection: band
+});
+
+
+
+
+
+
