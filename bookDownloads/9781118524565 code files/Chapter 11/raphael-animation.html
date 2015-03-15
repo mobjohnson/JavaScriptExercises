@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Raphael Animation</title>
+</head>
+<body>
+
+<div id="my-svg"></div>
+
+<script src="../js/raphael-min.js"></script>
+
+<script>
+
+var paper = Raphael(document.getElementById('my-svg'), 600, 400);
+
+var triangle = paper.path('M300,100 L150,300 L450,300 Z');
+
+(function animationCycle() {
+  triangle.animate({path: 'M300,300 L150,100 L450,100 Z'}, 1200, '<>',
+  function() {
+    triangle.animate({path: 'M300,300 L600,300 L450,100 Z'}, 1200, '<>', 
+    function() {
+      triangle.animate({path: 'M450,100 L600,300 L300,300 Z'}, 1200, 
+      '<>', function() {
+        triangle.animate({path: 'M300,100 L150,300 L450,300 Z'}, 1200, 
+        '<>', animationCycle);
+      });
+    });
+  });
+})();
+
+</script>
+
+</body>
+</html>

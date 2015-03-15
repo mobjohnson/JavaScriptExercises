@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Local Storage Syncing with Backbone</title>
+</head>
+
+<body>
+
+<script src="../js/jquery-1.7.2.min.js"></script>
+<script src="../js/underscore.min.js"></script>
+<script src="../js/backbone.min.js"></script>
+<script src="../js/backbone.localStorage.js"></script>
+
+<script>
+
+// create the model
+var User = Backbone.Model.extend({
+  initialize: function() {
+    // add handlers to save any changes to the model
+    this.on('add', this.addHandler);
+    this.on('change', this.changeHandler);
+    this.on('remove', this.removeHandler);
+  },
+  
+  addHandler: function() {
+    // save the model when it's created
+    this.save();
+  },
+  
+  changeHandler: function() {
+    // only save what has changed
+    this.save(this.changed);
+  },
+  
+  removeHandler: function() {
+    // destroy the model from the server
+    this.destroy();
+  }
+});
+
+// create the collection
+var Users = Backbone.Collection.extend({
+  model: User,
+  // set up the local storage handler
+  localStorage: new Backbone.LocalStorage('users')
+});
+
+// create a new instance of the collection
+var users = new Users;
+
+// fetch the collection from local storage
+users.fetch();
+
+// log the collection
+console.log( users.toJSON() );
+
+
+</script>
+</body>
+</html>

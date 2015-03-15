@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Canvas Animation</title>
+</head>
+<body>
+
+<canvas id="my-canvas" width="200" height="150"></canvas>
+
+<br />
+
+<a href="#" class="animate-button">Click to start animation</a>
+
+<script src="../js/jquery-1.7.2.min.js"></script>
+
+<script>
+
+var canvas = document.getElementById('my-canvas');
+
+if ( canvas.getContext) {
+  var ctx = canvas.getContext('2d');
+  
+  $('.animate-button').click(function(e) {
+    e.preventDefault();
+    
+    var posX = 0;
+  
+    var drawInterval = setInterval(function(){
+      posX++;
+
+      // stop when it gets to the edge
+      if ( posX > 150 ) {
+        clearInterval(drawInterval);
+        return;
+      }
+  
+      ctx.clearRect(0, 0, 200, 150);
+      ctx.fillRect(posX, 10, 50, 50);
+    }, 1000/60);
+  });
+}
+
+</script>
+
+</body>
+</html>

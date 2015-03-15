@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Current Location</title>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+
+<style type="text/css">
+html, body, #map_canvas { height: 100% }
+body { margin: 0; padding: 0 }
+</style>    
+</head>
+
+<body>
+
+<div id="map_canvas" style="width:100%; height:100%"></div>
+  
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&sensor=true">
+</script>
+
+<script>
+
+// get current position
+if ( navigator.geolocation ) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+        displayMap( position.coords.latitude, position.coords.longitude );
+    });
+}
+
+// show map
+function displayMap(latitude, longitude) {
+    // define map options
+    var mapOptions = {
+        center: new google.maps.LatLng(latitude, longitude),
+        zoom: 10,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+  
+    // pull the map from the google API
+    var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+}
+</script>
+
+</body>
+</html>

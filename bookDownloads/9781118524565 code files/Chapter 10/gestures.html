@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Transform Gestures</title>
+
+<style type="text/css">
+#transformer {
+  background: tomato;
+  width: 300px;
+  height: 300px;
+  margin: 50px auto;
+}
+</style>
+
+<meta name="viewport" content="width=500, user-scalable=no"/>
+
+</head>
+<body>
+
+<div id="transformer"></div>
+
+<script src="../js/jquery-1.7.2.min.js"></script>
+<script src="../js/hammer.js"></script>
+
+<script>
+
+var wrapper = document.getElementById('transformer');
+var hammer = new Hammer( wrapper );
+
+hammer.ontransform = function(e) {
+  wrapper.style.webkitTransform = 'rotate(' + e.rotation + 'deg)' + ' scale(' + e.scale + ')';
+  
+  return false;
+};
+
+</script>
+
+</body>
+</html>

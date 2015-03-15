@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Forms in Backbone</title>
+
+<style type="text/css">
+body {
+  font-family: Arial;
+  background: #EEE;
+  color: #333;
+  padding: 20px;
+  height: 1000px;
+}
+
+.form-item, fieldset {
+  border: 0;
+  overflow: hidden;
+  margin-bottom: 5px;
+  margin: 0 15px;
+}
+
+label {
+  float: left;
+  width: 200px;
+  text-align: right;
+  margin-right: 10px;
+  line-height: 30px;
+}
+
+input, input[type=text], input[type=password], textarea {
+  border: 1px solid #999;
+  border-radius: 5px;
+  padding: 5px;
+  width: 150px;
+  vertical-align: middle;
+}
+
+input.error {
+  border-color: red;
+}
+
+input[type=submit] {
+  margin-left: 210px;
+  margin-top: 20px;
+  font-size: 20px;
+}
+
+.error-message {
+  margin-left: 10px;
+  color: red;
+}
+
+</style>
+
+</head>
+<body>
+
+<div id="signup-form-wrapper"></div>
+
+<script type="text/template" id="form-template">
+<%
+var displayField = function(fieldKey, fieldValue, displayName, inputType) {
+  if ( typeof( inputType ) === 'undefined' ) inputType = 'text'
+  %>
+  <fieldset>
+    <label for="<%= fieldKey %>"><%= displayName %>:</label>
+    <input type="<%= inputType %>" name="<%= fieldKey %>" id="<%= fieldKey 
+%>" value="<%= fieldValue %>" <%= invalid[fieldKey] ? 'class="error"' : "" 
+%>>
+    <% if ( invalid[fieldKey] ) { %>
+      <span class="error-message"><%= invalid[fieldKey] %></span>
+    <% } %>
+  </fieldset>
+  <%
+}
+%>
+
+<form method="post" action="my-api.php">
+  <% displayField('name', name, 'Name'); %>
+  
+  <% displayField('email', email, 'Email', 'email'); %>
+  
+  <% displayField('username', username, 'Username'); %>
+  
+  <% displayField('password', password, 'Password', 'password'); %>
+    
+  <% displayField('passwordConf', passwordConf, 'Confirm Password', 'password'); %>
+  
+  <fieldset>
+    <input type="submit">
+  </fieldset>
+</form>
+</script>
+
+<script src="../js/jquery-1.7.2.min.js"></script>
+<script src="../js/underscore.min.js"></script>
+<script src="../js/backbone.min.js"></script>
+
+<script>
+var User = Backbone.Model.extend({
+  defaults: {
+    name: '',
+    email: '',
+    username: '',
+    password: '',
+    passwordConf: ''
+  },
+  
+  initialize: function() {
+    // tie in a sub-model to house invalid fields
+    this.set('invalid', new Invalid);
+  }
+});
+
+// model for invalid fields
+var Invalid = Backbone.Model.extend({});
+
+var user = new User;
+
+var SignupView = Backbone.View.extend({
+  el: '#signup-form-wrapper',
+  template: _.template( $('#form-template').text() ),
+  
+  events: {
+    'change input': 'inputChange',
+    'submit form': 'saveForm'
+  },
+  
+  initialize: function() {
+    // bind the this context
+    _.bindAll( this, 'validateForm', 'inputChange', 'saveForm' );
+    
+    // render the form
+    this.render();
+  },
+  
+  render: function() {
+    // convert the model and sub-model to an object
+    var modelData = this.model.toJSON();
+    modelData.invalid = modelData.invalid.toJSON();
+    
+    // insert it into the DOM
+    this.$el.html( this.template( modelData ) );
+  },
+  
+  validateForm: function(checkRequired) {
+    // convert the model data to JSON
+    var data = this.model.toJSON();
+    data.invalid = data.invalid.toJSON();
+    
+    // save a message for required field - this will be reused a lot
+    var requiredMsg = 'Required field';
+    
+    // check for valid email
+    var emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+    
+    if ( data.email.length && ! data.email.match(emailRegex) ) {
+      // add it to the invalid model
+      this.model.get('invalid').set('email', 'Must provide a valid email');
+    }
+    else {
+      // otherwise remove it if it's not a required field
+      if ( data.invalid.email != requiredMsg ) {
+        this.model.get('invalid').unset('email');
+      }
+    }
+    
+    // check that passwords match
+    if ( data.password.length && data.passwordConf.length && data.password != data.passwordConf ) {
+      // add it to the invalid model
+      this.model.get('invalid').set('password', "Passwords don't match");
+      this.model.get('invalid').set('passwordConf', "Passwords don't match");
+    }
+    else {
+      // otherwise remove it if it's not a required field
+      if ( data.invalid.password != requiredMsg ) {
+        this.model.get('invalid').unset('password');
+      }
+      
+      if ( data.invalid.passwordConf != requiredMsg ) {
+        this.model.get('invalid').unset('passwordConf');
+      }
+    }
+    
+    // check required fields
+    if ( checkRequired ) {
+      // make sure that all the fields are filled out
+      _.each(data, function(value, key) {
+        // check everything except the invalid model
+        if ( key == 'invalid' ) return false;
+        
+        // if empty field
+        if ( ! value.length ) {
+          // add it to the invalid model
+          this.model.get('invalid').set(key, requiredMsg);
+        }
+        else {
+          // otherwise remove the invalid flag - but only if 
+          // it's a required field flag
+          if ( data.invalid[key] == requiredMsg ) {
+            this.model.get('invalid').unset(key);
+          }
+        }
+      }, this);
+    }
+    
+    // if any invalid fields, return false, otherwise return true
+    if ( _.size( this.model.get('invalid').toJSON() ) ) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  },
+  
+  // whenever a form field changes
+  inputChange: function(e) {
+    var $input = $(e.target);
+    
+    // get the name of the key in the model
+    var inputName = $input.attr('name');
+    
+    // set the new value in the model
+    this.model.set(inputName, $input.val()); 
+    
+    // check if the form is valid, if not re-render it to display 
+    // error
+    if ( ! this.validateForm(false) ) this.render();
+  },
+  
+  // when the form submits
+  saveForm: function(e) {
+    // prevent it from saving the form the old fashioned way
+    e.preventDefault();
+    
+    // validate the form
+    if ( this.validateForm(true) ) {
+      // set the API location using the URL from the form
+      this.model.url = this.$el.find('form').attr('action');
+      
+      // clean up the data for the API
+      var data = this.model.toJSON();
+      delete data.invalid;
+      delete data.passwordConf;
+      
+      // if valid, save the model
+      this.model.save(data);
+    }
+    else {
+      // otherwise render the errors
+      this.render();
+    }
+  }
+});
+
+// create a new instance of the view
+var signupView = new SignupView({
+  model: user
+});
+
+</script>
+
+
+</body>
+</html>

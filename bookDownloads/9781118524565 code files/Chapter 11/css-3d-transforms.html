@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>3D Transforms in CSS3</title>
+<style type="text/css">
+body {
+	font-family: Arial;
+	background: #EEE;
+	color: #333;
+	padding: 80px;
+	height: 1000px;
+}
+
+.container {
+  width: 400px;
+  height: 250px;
+  position: relative;
+  -webkit-perspective: 500px;
+     -moz-perspective: 500px;
+          perspective: 500px;
+}
+
+.card {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 50px;
+  font-size: 48px;
+  background: tomato;
+  color: #FFF;
+  -webkit-transform: rotateY( 45deg );
+     -moz-transform: rotateY( 45deg );
+          transform: rotateY( 45deg );
+  -webkit-transition: -webkit-transform .5s ease;
+     -moz-transition:    -moz-transform .5s ease;
+          transition:         transform .5s ease;
+  
+}
+
+.card:hover {
+  -webkit-transform: rotateY( -45deg );
+     -moz-transform: rotateY( -45deg );
+          transform: rotateY( -45deg );
+}
+
+.instructions {
+  position: absolute;
+  top: 150px;
+  left: 550px;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+  <div class="card">CSS3 Transform</div>
+</div>
+
+<p class="instructions">Mouse over the card to animate</p>
+
+</body>
+</html>

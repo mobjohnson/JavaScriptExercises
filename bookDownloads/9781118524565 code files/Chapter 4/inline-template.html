@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Using an Inline Template</title>
+</head>
+
+<body>
+
+<script src="../js/jquery-1.7.2.min.js"></script>
+<script src="../js/underscore.min.js"></script>
+
+<script type="text/template" id="my-template">
+
+<article>
+  <hgroup>
+    <h1><%= title %></h1>
+    <h2><%= subtitle %></h2>
+  </hgroup>
+  <p><%= description %></p>
+</article>
+
+</script>
+
+<script>
+
+var myTemplate = _.template( $('#my-template').text() );
+        
+// compile it
+var compiled = myTemplate({
+  title: 'JavaScript Templates',
+  subtitle: 'Are pretty awesome',
+  description: 'They take the markup out of your JavaScript'
+});
+    
+// append it to the DOM
+$('body').append(compiled);
+
+</script>
+</body>
+</html>

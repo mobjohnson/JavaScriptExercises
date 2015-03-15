@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>gRaphael Charts</title>
+
+</head>
+<body>
+
+<h2>Pie Chart</h2>
+<div id="my-svg"></div>
+
+<h2>Bar Chart</h2>
+<div id="my-svg-2"></div>
+
+<h2>Line Chart</h2>
+<div id="my-svg-3"></div>
+
+<script src="../js/raphael-min.js"></script>
+<script src="../js/g.raphael-min.js"></script>
+<script src="../js/g.pie-min.js"></script>
+<script src="../js/g.bar-min.js"></script>
+<script src="../js/g.line-min.js"></script>
+
+<script>
+
+/***** pie chart *****/
+
+var paper = new Raphael(document.getElementById('my-svg'), 600, 400);
+
+paper.piechart(300, 200, 150, [65, 40, 13, 32, 5, 1, 2], {
+  legend: ['Donkeys', 'Monkeys', 'Llamas', 'Pandas', 'Giraffes', 'Rhinos', 
+'Gorillas'],
+  href: ['url-1.html', 'url-2.html', 'url-3.html', 'url-4.html', 
+'url-5.html', 'url-6.html', 'url-7.html']
+});
+
+
+/***** bar chart *****/
+
+var paper = new Raphael(document.getElementById('my-svg-2'), 600, 400);
+
+var data1 = [63, 86, 26, 15, 36, 62, 18, 78],
+    data2 = [12, 47, 75, 84, 7, 41, 29, 4],
+    data3 = [39, 91, 78, 4, 80, 54, 43, 49];
+
+paper.barchart(0, 0, 600, 400, [data1, data2, data3]);
+
+// add labels
+
+Raphael.fn.labelBarChart = function(opt) {
+  var paper = this;
+  
+  // offset x_start and width for bar chart gutters
+  opt.x_start += 10;
+  opt.width -= 20;
+  
+  var labelWidth = opt.width / opt.labels.length;
+  
+  // offset x_start to center under each column
+  opt.x_start += labelWidth / 2;
+  
+  for ( var i = 0, len = opt.labels.length; i < len; i++ ) {
+    paper.text( opt.x_start + ( i * labelWidth ), opt.y_start, 
+  opt.labels[i] ).attr( opt.textAttr );
+  }
+};
+
+var labels = ['Col 1', 'Col 2', 'Col 3', 'Col 4', 'Col 5', 'Col 6',
+  'Col 7', 'Col 8'];
+
+paper.labelBarChart({
+  x_start: 0,
+  y_start: 390,
+  width: 600,
+  labels: labels,
+  textAttr: {'font-size': 14}
+});
+
+
+/***** line chart *****/
+
+var paper = new Raphael(document.getElementById('my-svg-3'), 600, 400);
+
+var xVals = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55],
+    yVals1 = [63, 84, 75, 91, 62, 75, 35, 53, 47, 75, 78, 54],
+    yVals2 = [24, 45, 31, 42, 88, 85, 67, 88, 72, 37, 54, 48];
+
+var chart = paper.linechart(30, 0, 570, 380, xVals, [yVals1, yVals2], {axis: 
+'0 0 1 1', axisxstep: 11});
+
+</script>
+
+</body>
+</html>

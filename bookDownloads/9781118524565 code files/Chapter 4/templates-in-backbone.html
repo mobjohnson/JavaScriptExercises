@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Templates in Backbone</title>
+</head>
+
+<body>
+
+<div id="user-card"></div>  
+
+<script type="text/template" id="user-template">
+
+<a href="/users/<%= username %>">
+  <h1><%= displayName %></h1>
+  
+  <p><%= bio %></p>
+</a>
+
+</script>
+
+<script src="../js/jquery-1.7.2.min.js"></script>
+<script src="../js/underscore.min.js"></script>
+<script src="../js/backbone.min.js"></script>
+
+<script type="text/javascript">
+// create the model for the user
+var User = Backbone.Model.extend({});
+
+var user = new User({
+  username: 'jonraasch',
+  displayName: 'Jon Raasch',
+  bio: 'Some nerd'
+}); 
+
+// create the view
+var UserView = Backbone.View.extend({
+  el: '#user-card',
+  
+  template: _.template( $('#user-template').text() ),
+  
+  initialize: function() {
+    // re-render the view if the model changes
+    this.model.on('change', this.render, this);
+        
+    this.render();
+  },
+  
+  render: function() {
+    // compile the template with the model
+    var compiled = this.template( this.model.toJSON() );
+    
+    // append the compiled markup to the DOM
+    this.$el.html( compiled );
+    
+    return this;
+  }
+});
+
+// create a new instance of the view, tying it to the user model
+var userView = new UserView({
+  model: user
+});
+</script>
+
+</body>
+</html>

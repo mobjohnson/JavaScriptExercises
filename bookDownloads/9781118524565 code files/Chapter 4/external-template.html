@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Using an External Template</title>
+</head>
+
+<body>
+
+<script src="../js/jquery-1.7.2.min.js"></script>
+<script src="../js/underscore.min.js"></script>
+
+<script type="text/template" src="my-template.html"
+id="my-template"></script>
+
+<script>
+
+$.ajax({
+  // get the template url from the script tag
+  url: $('#my-template').attr('src'),
+  
+  // what to do once it loads
+  success: function(data) {
+    // after it loads, define your template
+    var myTemplate = _.template(data);
+        
+    // compile it
+    var compiled = myTemplate({
+      title: 'JavaScript Templates',
+      subtitle: 'Are pretty awesome',
+      description: 'They take the markup out of your JavaScript'
+    });
+    
+    // append it to the DOM
+    $('body').append(compiled);
+  },
+  
+  // in case something goes wrong
+  error: function() {
+    console.log('Problem loading template');
+  }
+});
+
+</script>
+</body>
+</html>

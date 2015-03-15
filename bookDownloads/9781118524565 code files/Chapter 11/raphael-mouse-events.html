@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Raphael Mouse Events</title>
+</head>
+<body>
+
+<div id="my-svg"></div>
+
+<p>Click the triangle</p>
+
+<script src="../js/raphael-min.js"></script>
+
+<script>
+
+var paper = Raphael(document.getElementById('my-svg'), 600, 400);
+
+var triangle = paper.path('M300,100 L150,300 L450,300 Z');
+triangle.attr('fill', 'white');
+
+triangle.node.onclick = function() {
+  if ( triangle.attr('fill') === 'white' ) triangle.attr('fill', 'red');
+  else triangle.attr('fill', 'white');
+};
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Range Slider Value</title>
+
+<style type="text/css">
+
+.range-value {
+  font-size: 1.5em;
+  margin-left: .5em;
+}
+
+</style>
+
+</head>
+<body>
+
+<input type="range">
+<span class="range-value"></span>
+
+<script src="../js/jquery-1.7.2.min.js"></script>
+
+<script>
+
+$.fn.displaySliderVal = function() {
+  this.siblings('.range-value').text( this.val() );
+return this;
+};
+    
+$('input[type="range"]').change(function(e) {
+  $(this).displaySliderVal();
+}).displaySliderVal();
+
+
+</script>
+
+</body>
+</html>

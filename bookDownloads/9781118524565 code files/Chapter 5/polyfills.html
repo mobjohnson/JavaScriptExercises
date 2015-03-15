@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Polyfills for Autofocus and Placeholder</title>
+
+<script src="../js/modernizr.js"></script>
+
+</head>
+<body>
+
+<input placeholder="blah blah blah" autofocus/>
+
+
+<script src="../js/jquery-1.7.2.min.js"></script>
+
+<script>
+
+/***** autofocus polyfill *****/
+
+if ( ! Modernizr.input.autofocus ) {
+  $('[autofocus]').filter(':last').focus();
+}
+
+/***** placeholder polyfill *****/
+
+var jsPlaceholder = function() {
+  // when the field gains focus
+  $('[placeholder]').focus(function() {
+    var $input = $(this);
+    
+    //  determine if the field is showing the placeholder text
+    if ($input.val() === $input.attr('placeholder')) {
+      // empty out the field and remove the placeholder class
+      $input.val('');
+      if ( $input.hasClass('placeholder') ) {
+        $input.removeClass('placeholder');
+      }
+    }
+    
+  // when the field loses focus
+  }).blur(function() {
+    var $input = $(this);
+    
+    // replace the placeholder if they haven't entered any text
+    if ($input.val() === '' || $input.val() === 
+      $input.attr('placeholder')) {
+      // if password input, you have to clone it as a text input 
+      // and then remove this later
+      // (otherwise it will show up as ******)
+      if ( $input.attr('type') == 'password' ) {
+        var $newInput = $input.clone();
+        $newInput.attr('type', 'text');
+        $newInput.val($input.attr('placeholder'));
+        $newInput.addClass('placeholder clone');
+        $newInput.insertAfter($input);
+        
+        $input.hide();
+        
+        // add focus state to remove this input and show / focus 
+        // the original
+        $newInput.focus(function() {
+          $(this).remove();
+          $input.show().focus();
+        });
+      }
+      else {
+        // add the placeholder text and class
+        $input.val($input.attr('placeholder'));
+        $input.addClass('placeholder');
+      }
+    }
+  // trigger the blur so the placeholder text is added on page load
+  }).trigger('blur');
+  
+  // must remove placeholders when the form submits so they don't post
+  $('form').submit(function() {
+    $(this).find('[placeholder]').each(function() {
+      var $input = $(this);
+      
+      // remove any cloned password inputs
+      if ( $input.hasClass('clone') ) {
+        $input.remove();
+        return;
+      }
+      
+      // empty the field if it is displaying the placeholder
+      if ($input.val() === $input.attr('placeholder')) {
+        $input.val('');
+      }
+    })
+  });
+};
+
+// add placeholder polyfill if it’s unsupported
+if ( ! Modernizr.input.placeholder ) {
+  jsPlaceholder();
+}
+
+</script>
+
+</body>
+</html>

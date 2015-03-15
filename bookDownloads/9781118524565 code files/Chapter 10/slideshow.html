@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Gesture Slideshow</title>
+
+<style type="text/css">
+
+.slideshow {
+  width: 500px;
+  height: 300px;
+  position: relative;
+  overflow: hidden;
+}
+
+.slides {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10000px;
+  -webkit-transition: left 0.3s ease; 
+     -moz-transition: left 0.3s ease;
+       -o-transition: left 0.3s ease;
+          transition: left 0.3s ease;
+}
+
+.slide {
+  width: 500px;
+  height: 300px;
+  float: left;
+}
+
+</style>
+
+<meta name="viewport" content="width=500"/>
+
+</head>
+<body>
+
+<section class="slideshow">
+  <div class="slides">
+     <img src="images/my-image.png" alt="" class="slide" />
+     <img src="images/my-image-2.png" alt="" class="slide" />
+     <img src="images/my-image-3.png" alt="" class="slide" />
+     <img src="images/my-image-4.png" alt="" class="slide" />
+  </div>
+</section>
+
+<script src="../js/jquery-1.7.2.min.js"></script>
+<script src="../js/hammer.js"></script>
+
+<script>
+
+function Slideshow($wrap) {
+  this.currSlide = 0;
+  
+  // cache some variables
+  var $slideWrap = $wrap.find('.slides');
+  var slideWidth = $slideWrap.children(':first-child').width();
+  var slideCount = $slideWrap.children().length;
+    
+  this.changeSlide = function() {
+    // sanity check on currSlide
+    var $kids = $slideWrap.children();
+    if ( this.currSlide >= $kids.length ) this.currSlide = 0;
+    else if ( this.currSlide < 0 ) this.currSlide = $kids.length - 1;
+    
+    // change the horizontal position of the slides
+    $slideWrap.css('left', slideWidth * this.currSlide * -1);
+  };
+  
+  // change slides on an interval
+  var slideInterval = setInterval( $.proxy( function() {
+    this.currSlide++;
+    this.changeSlide();
+  }, this), 4000);
+  
+  // make swipeable
+  var hammer = new Hammer( $wrap[0] ); 
+  
+  hammer.onswipe = $.proxy(function(e) {
+    // clear any interval
+    clearInterval( slideInterval );
+    
+    switch( e.direction ) {
+      case 'left':
+        // stop if at the bounds
+        if (this.currSlide >= slideCount - 1) {
+          // rubberband it
+          var thisPosLeft = slideWidth * -1 * (slideCount - 1);
+          $slideWrap.css('left', thisPosLeft + slideWidth / 3 * -1);
+      
+          setTimeout(function() {
+            $slideWrap.css('left', thisPosLeft);
+          }, 200);
+      
+          return false;
+        }
+    
+        this.currSlide++;
+        this.changeSlide();
+      break;
+      
+      case 'right':
+        // stop if at the bounds
+        if (this.currSlide <= 0) {
+          // rubberband it
+          $slideWrap.css('left', slideWidth / 3);
+      
+          setTimeout(function() {
+            $slideWrap.css('left', 0);
+          }, 200);
+      
+          return false;
+        }
+    
+        this.currSlide--;
+        this.changeSlide();
+      break;
+    }
+    
+    // prevent default behavior
+    return false;
+  }, this);
+};
+
+var slideshow = new Slideshow( $('.slideshow') );
+
+</script>
+
+</body>
+</html>
