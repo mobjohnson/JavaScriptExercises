@@ -152,6 +152,7 @@
 //     });
 //   }
 // });
+
 // // create a new instance of the collection
 // var fruitbowl = new Fruits({
 //   type: 'apple',
@@ -316,7 +317,7 @@ var MyView = Backbone.View.extend({
   tagName: 'li'
 });
 
-var myView = new MyView;
+var myBiew = new MyView;
 
 
 
