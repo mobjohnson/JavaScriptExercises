@@ -9,11 +9,11 @@ http.createServer( function(request, response){
   });
 
   // send the repsonse with the content
-  response.end('Hello World!');
+  response.end('Hello World!ies');
 
 }).listen(8000);
 
 // log it to the console
-console.log('Server running on port 8000')
+console.log('Server running on port 8000');
 
 // 
