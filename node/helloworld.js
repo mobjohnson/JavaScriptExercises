@@ -9,7 +9,7 @@ http.createServer( function(request, response){
   });
 
   // send the repsonse with the content
-  response.end('Hello World!ies');
+  response.end('Hello World!');
 
 }).listen(8000);
 
